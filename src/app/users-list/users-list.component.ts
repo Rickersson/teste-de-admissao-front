@@ -12,7 +12,7 @@ export class UsersListComponent implements OnInit {
   searchTerm: string = '';
   currentPage = 1;
   pageSize = 5;
-  Math = Math; // Expondo Math para o template
+  Math = Math; 
 
   constructor(private router: Router) {}
 
