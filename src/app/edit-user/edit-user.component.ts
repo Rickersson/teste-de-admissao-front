@@ -6,13 +6,13 @@ import { UserService } from '../services/user.service';
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
-  styleUrls: ['./edit-user.component.css']
+  styleUrls: ['./edit-user.component.scss']
 })
 export class EditUserComponent implements OnInit {
   editForm: FormGroup;
   hidePassword = true;
   currentUser: any;
-  userId: string;
+  userId!: string;
 
   constructor(
     private fb: FormBuilder,
