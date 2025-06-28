@@ -22,13 +22,13 @@ export class UsersListComponent implements OnInit {
 
   loadUsers(): void {
     this.users = [
-      { id: 1, name: 'João Silva', email: 'joao@exemplo.com', role: 'Usuário', status: 'Ativo' },
-      { id: 2, name: 'Maria Souza', email: 'maria@exemplo.com', role: 'Administrador', status: 'Ativo' },
-      { id: 3, name: 'Pedro Oliveira', email: 'pedro@exemplo.com', role: 'Usuário', status: 'Pendente' },
-      { id: 4, name: 'Ana Costa', email: 'ana@exemplo.com', role: 'Editor', status: 'Ativo' },
-      { id: 5, name: 'Carlos Mendes', email: 'carlos@exemplo.com', role: 'Usuário', status: 'Inativo' },
-      { id: 6, name: 'Fernanda Lima', email: 'fernanda@exemplo.com', role: 'Administrador', status: 'Ativo' },
-      { id: 7, name: 'Ricardo Alves', email: 'ricardo@exemplo.com', role: 'Editor', status: 'Ativo' },
+      { id: 1, name: 'João Silva', email: 'joao@exemplo.com', status: 'Ativo' },
+      { id: 2, name: 'Maria Souza', email: 'maria@exemplo.com', status: 'Ativo' },
+      { id: 3, name: 'Pedro Oliveira', email: 'pedro@exemplo.com',  status: 'Inativo' },
+      { id: 4, name: 'Ana Costa', email: 'ana@exemplo.com',  status: 'Ativo' },
+      { id: 5, name: 'Carlos Mendes', email: 'carlos@exemplo.com',  status: 'Inativo' },
+      { id: 6, name: 'Fernanda Lima', email: 'fernanda@exemplo.com',  status: 'Ativo' },
+      { id: 7, name: 'Ricardo Alves', email: 'ricardo@exemplo.com',  status: 'Ativo' },
     ];
     this.filteredUsers = [...this.users];
   }
