@@ -1,7 +1,6 @@
-
-
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { KeycloakService } from 'src/app/services/keycloak.service';
 
 @Component({
   selector: 'app-login',
@@ -9,21 +8,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  hidePassword = true;
-  loginForm: FormGroup;
+  constructor(
+    private keycloakService: KeycloakService,
+    private router: Router
+  ) {}
 
-  constructor(private fb: FormBuilder) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      rememberMe: [false]
-    });
+  // Método de login via Keycloak
+  onLogin(): void {
+    this.keycloakService.getKeycloak().login();
   }
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      console.log('Login data:', this.loginForm.value);
-      // Aqui você faria a chamada à API de autenticação
-    }
+  // Método de logout
+  onLogout(): void {
+    this.keycloakService.logout();
+    this.router.navigate(['/login']);
   }
 }

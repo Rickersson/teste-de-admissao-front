@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,6 +15,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { SignupComponent } from './auth/signup/signup.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { UsersListComponent } from './users-list/users-list.component';
+import { KeycloakService } from './services/keycloak.service';
+
+export function initializeKeycloak(keycloak: KeycloakService) {
+  return () => keycloak.init();
+}
 
 @NgModule({
   declarations: [
@@ -25,7 +30,9 @@ import { UsersListComponent } from './users-list/users-list.component';
   EditUserComponent,
    UsersListComponent
   ],
-  imports: [ HttpClientModule,
+  imports: [
+    
+    HttpClientModule,
      BrowserModule,
      FormsModule,
     AppRoutingModule,
@@ -35,9 +42,15 @@ import { UsersListComponent } from './users-list/users-list.component';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+   
   ],
-  providers: [],
+  providers: [    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService]
+    }],
   bootstrap: [AppComponent]
 })
 
