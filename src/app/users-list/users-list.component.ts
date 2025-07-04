@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
+import { User } from '../interfaces/user.interface';
 
 @Component({
   selector: 'app-users-list',
@@ -7,49 +9,24 @@ import { Router } from '@angular/router';
   styleUrls: ['./users-list.component.scss']
 })
 export class UsersListComponent implements OnInit {
-  users: any[] = [];
-  filteredUsers: any[] = [];
+  users: User[] = [];
+  filteredUsers: User[] = [];
   searchTerm: string = '';
   currentPage = 1;
   pageSize = 5;
-  Math = Math; 
+  Math = Math;
+  isLoading = true;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
   }
 
-  loadUsers(): void {
-    this.users = [
-      { id: 1, name: 'João Silva', email: 'joao@exemplo.com', status: 'Ativo' },
-      { id: 2, name: 'Maria Souza', email: 'maria@exemplo.com', status: 'Ativo' },
-      { id: 3, name: 'Pedro Oliveira', email: 'pedro@exemplo.com',  status: 'Inativo' },
-      { id: 4, name: 'Ana Costa', email: 'ana@exemplo.com',  status: 'Ativo' },
-      { id: 5, name: 'Carlos Mendes', email: 'carlos@exemplo.com',  status: 'Inativo' },
-      { id: 6, name: 'Fernanda Lima', email: 'fernanda@exemplo.com',  status: 'Ativo' },
-      { id: 7, name: 'Ricardo Alves', email: 'ricardo@exemplo.com',  status: 'Ativo' },
-    ];
-    this.filteredUsers = [...this.users];
-  }
-
-  filterUsers(): void {
-    if (!this.searchTerm) {
-      this.filteredUsers = [...this.users];
-      return;
-    }
-    
-    const term = this.searchTerm.toLowerCase();
-    this.filteredUsers = this.users.filter(user => 
-      user.name.toLowerCase().includes(term) || 
-      user.email.toLowerCase().includes(term) ||
-      user.role.toLowerCase().includes(term) ||
-      user.status.toLowerCase().includes(term)
-    );
-    this.currentPage = 1;
-  }
-
-  get paginatedUsers(): any[] {
+  get paginatedUsers(): User[] {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     return this.filteredUsers.slice(startIndex, startIndex + this.pageSize);
   }
@@ -66,11 +43,48 @@ export class UsersListComponent implements OnInit {
     }
   }
 
-  deleteUser(userId: number): void {
-    if (confirm('Tem certeza que deseja excluir este usuário?')) {
-      this.users = this.users.filter(user => user.id !== userId);
-      this.filterUsers();
-      alert('Usuário excluído com sucesso!');
-    }
+ filterUsers(): void {
+  if (!this.searchTerm) {
+    this.filteredUsers = [...this.users];
+    return;
   }
+  
+  const term = this.searchTerm.toLowerCase();
+  this.filteredUsers = this.users.filter(user => 
+    user.email.toLowerCase().includes(term) ||
+    (user.isActive ? 'ativo' : 'inativo').includes(term)
+  );
+  this.currentPage = 1;
+}
+
+  loadUsers(): void {
+    this.isLoading = true;
+    this.userService.getUsers().subscribe({
+      next: (users) => {
+        this.users = users;
+        this.filteredUsers = [...this.users];
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar usuários:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+deleteUser(userId: number): void {
+  if (confirm('Tem certeza que deseja excluir este usuário?')) {
+    this.userService.deleteUser(userId).subscribe({
+      next: () => {
+        this.users = this.users.filter(user => user.id !== userId);
+        this.filterUsers();
+        alert('Usuário excluído com sucesso!');
+      },
+      error: (error) => {
+        console.error('Erro ao excluir usuário:', error);
+        alert('Ocorreu um erro ao excluir o usuário');
+      }
+    });
+  }
+}
 }

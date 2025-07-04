@@ -21,11 +21,12 @@ export class EditUserComponent implements OnInit {
     private userService: UserService
   ) {
     this.editForm = this.fb.group({
-      newEmail: ['', [Validators.email]],
-      newPassword: ['', [Validators.minLength(6)]],
-      confirmNewPassword: [''],
-      currentPassword: ['', Validators.required]
-    }, { validator: this.passwordMatchValidator });
+  newEmail: ['', [Validators.email]],
+  newPassword: ['', [Validators.minLength(6)]],
+  confirmNewPassword: [''],
+  currentPassword: ['', Validators.required],
+  status: []
+}, { validator: this.passwordMatchValidator });
   }
 
   ngOnInit(): void {
@@ -33,18 +34,23 @@ export class EditUserComponent implements OnInit {
     this.loadUserData();
   }
 
-  loadUserData(): void {
-    // Simulação - na prática você buscaria do serviço
-    this.currentUser = {
-      id: this.userId,
-      email: 'usuario@exemplo.com'
-    };
-    
-    // Ou usando um serviço real:
-    // this.userService.getUser(this.userId).subscribe(user => {
-    //   this.currentUser = user;
-    // });
-  }
+loadUserData(): void {
+  this.userService.getUser(this.userId).subscribe({
+    next: (user) => {
+      this.currentUser = user;
+      
+      this.editForm.patchValue({
+        newEmail: user.email,
+        status: user.isActive
+      });
+    },
+    error: (err) => {
+      console.error('Erro ao carregar usuário:', err);
+      alert('Erro ao carregar os dados do usuário');
+      this.router.navigate(['/users']);
+    }
+  });
+}
 
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('newPassword')?.value;
@@ -53,28 +59,34 @@ export class EditUserComponent implements OnInit {
     return password === confirmPassword ? null : { mismatch: true };
   }
 
-  onSubmit(): void {
-    if (this.editForm.valid) {
-      const formData = this.editForm.value;
-      
-      // Simulação - na prática você chamaria um serviço
-      console.log('Dados para atualização:', {
-        id: this.userId,
-        email: formData.newEmail || this.currentUser.email,
-        newPassword: formData.newPassword,
-        currentPassword: formData.currentPassword
-      });
+serverError: string | null = null;
 
-      // Exemplo com serviço real:
-      // this.userService.updateUser(this.userId, formData).subscribe({
-      //   next: () => this.router.navigate(['/users']),
-      //   error: (err) => console.error('Erro ao atualizar:', err)
-      // });
+onSubmit(): void {
+  this.serverError = null;
 
-      alert('Usuário atualizado com sucesso!');
-      this.router.navigate(['/users']);
-    }
+  if (this.editForm.valid) {
+    const { newEmail, newPassword, currentPassword, status } = this.editForm.value;
+
+    const updatedUser = {
+      email: newEmail || this.currentUser.email,
+      password: newPassword,
+      currentPassword,
+      isActive: status
+    };
+
+    this.userService.updateUser(this.userId, updatedUser).subscribe({
+      next: () => {
+        alert('Usuário atualizado com sucesso!');
+        this.router.navigate(['/users']);
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar usuário:', err);
+        this.serverError = err.error?.message || 'Erro ao atualizar o usuário';
+      }
+    });
   }
+}
+
 
   cancel(): void {
     this.router.navigate(['/users']);

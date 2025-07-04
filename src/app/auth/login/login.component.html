@@ -1,3 +1,4 @@
+<!-- login.component.html -->
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-800 p-4">
   <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
     <div class="p-8">
@@ -11,36 +12,61 @@
         <p class="text-gray-600 mt-2">Faça login para continuar</p>
       </div>
 
-      <!-- Botão de Login com Keycloak -->
-      <div class="space-y-6">
-        <button
-          (click)="onLogin()"
-          class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 flex items-center justify-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 22c-5.514 0-10-4.486-10-10s4.486-10 10-10 10 4.486 10 10-4.486 10-10 10zm2-14h-4v2h4v2h-4v2h4v2h-6v-8h6v2z"/>
-          </svg>
-          Entrar com Keycloak
-        </button>
+  <form [formGroup]="loginForm" (ngSubmit)="onLocalLogin()" class="space-y-4">
+  
+<div>
+  <label for="username" class="block text-sm font-medium text-gray-700">E-mail</label>
+  <input 
+    type="email" 
+    id="username" 
+    formControlName="username"
+    [ngClass]="{
+      'border-red-500 focus:border-red-500 focus:ring-red-500': loginForm.get('username')?.invalid && loginForm.get('username')?.touched,
+      'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500': !(loginForm.get('username')?.invalid && loginForm.get('username')?.touched)
+    }"
+    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm"
+    placeholder="seu@email.com"
+  >
+  <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid" class="text-sm text-red-600 mt-1">
+    <div *ngIf="loginForm.get('username')?.errors?.['required']">E-mail é obrigatório.</div>
+    <div *ngIf="loginForm.get('username')?.errors?.['email']">E-mail inválido.</div>
+  </div>
+</div>
 
-        <!-- Separador -->
-        <div class="relative">
-          <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-gray-300"></div>
-          </div>
-          <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-white text-gray-500">OU</span>
-          </div>
-        </div>
 
-        <!-- Botão de Logout (para teste) -->
-        <button
-          (click)="onLogout()"
-          class="w-full py-3 px-4 bg-gray-100 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
-        >
-          Sair da conta
-        </button>
-      </div>
+<div>
+  <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+  <input 
+    type="password" 
+    id="password" 
+    formControlName="password"
+    [ngClass]="{
+      'border-red-500 focus:border-red-500 focus:ring-red-500': loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
+      'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500': !(loginForm.get('password')?.invalid && loginForm.get('password')?.touched)
+    }"
+    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm"
+    placeholder="********"
+  >
+  <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-sm text-red-600 mt-1">
+    Senha é obrigatória.
+  </div>
+</div>
+
+  
+  <div *ngIf="serverError" class="text-sm text-red-600 mt-2 text-center">
+    {{ serverError }}
+  </div>
+
+  
+  <button 
+    type="submit"
+    [disabled]="loginForm.invalid"
+    class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 disabled:opacity-75"
+  >
+    Entrar
+  </button>
+</form>
+
     </div>
 
     <div class="bg-gray-50 px-8 py-4 text-center">

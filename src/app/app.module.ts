@@ -15,11 +15,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { SignupComponent } from './auth/signup/signup.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { UsersListComponent } from './users-list/users-list.component';
-import { KeycloakService } from './services/keycloak.service';
 
-export function initializeKeycloak(keycloak: KeycloakService) {
-  return () => keycloak.init();
-}
+
+
 
 @NgModule({
   declarations: [
@@ -45,12 +43,7 @@ export function initializeKeycloak(keycloak: KeycloakService) {
     MatCheckboxModule,
    
   ],
-  providers: [    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService]
-    }],
+  providers: [],
   bootstrap: [AppComponent]
 })
 

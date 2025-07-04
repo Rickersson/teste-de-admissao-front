@@ -10,9 +10,9 @@ import { EditUserComponent } from './edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
-  { path: "", redirectTo: "/login", pathMatch: "full" }, // Redireciona raiz para login
+  { path: "", redirectTo: "/login", pathMatch: "full" }, 
   {path: "signup", component: SignupComponent },
-  {path: "edit-user", component: EditUserComponent},
+  {path: "edit-user/:id", component: EditUserComponent},
   { path: 'users', component: UsersListComponent }]
 
 @NgModule({
