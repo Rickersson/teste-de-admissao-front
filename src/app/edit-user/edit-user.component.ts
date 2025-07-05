@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
-  styleUrls: ['./edit-user.component.scss']
+  styleUrls: ['./edit-user.component.scss'],
+   standalone: true, imports:[FormsModule, ReactiveFormsModule, CommonModule, FormsModule]
 })
 export class EditUserComponent implements OnInit {
   editForm: FormGroup;

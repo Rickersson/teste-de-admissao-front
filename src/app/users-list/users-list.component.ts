@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule ,]
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule]
 })
 export class UsersListComponent implements OnInit {
   users: User[] = [];

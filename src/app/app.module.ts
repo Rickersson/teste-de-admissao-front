@@ -15,13 +15,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { SignupComponent } from './auth/signup/signup.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { UsersListComponent } from './users-list/users-list.component';
+import { RouterModule } from '@angular/router';
 
 
 
 
 @NgModule({
   declarations: [
- 
+ AppComponent
   ],
   imports: [
     
@@ -36,10 +37,10 @@ import { UsersListComponent } from './users-list/users-list.component';
     MatButtonModule,
     MatIconModule,
     MatCheckboxModule,
-   
+   RouterModule
   ],
   providers: [],
-  bootstrap: []
+  bootstrap: [AppComponent]
 })
 
 export class AppModule { }

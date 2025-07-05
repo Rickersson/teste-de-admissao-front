@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { KeycloakService } from 'src/app/services/keycloak.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule]
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
