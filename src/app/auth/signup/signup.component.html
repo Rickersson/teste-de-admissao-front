@@ -1,117 +1,159 @@
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-800 p-4">
+<div
+  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-800 p-4"
+>
   <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
     <div class="p-8">
       <div class="text-center mb-8">
-        <div class="mx-auto bg-indigo-100 rounded-xl w-16 h-16 flex items-center justify-center mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        <div
+          class="mx-auto bg-indigo-100 rounded-xl w-16 h-16 flex items-center justify-center mb-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-indigo-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
           </svg>
         </div>
         <h1 class="text-3xl font-bold text-gray-800">Crie sua conta</h1>
         <p class="text-gray-600 mt-2">Preencha os dados para se registrar</p>
       </div>
 
-      <form (ngSubmit)="onSubmit()" class="space-y-6">
-        <!-- Email Field -->
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Email -->
         <div>
-        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <input 
-            id="email" 
-            type="email" 
-            [(ngModel)]="email" 
-            name="email"
-            (blur)="validateEmail()"
-            class="w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            [class.border-gray-300]="!emailError"
-            [class.border-red-500]="emailError"
-            placeholder="seu@email.com"
-            required
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Email</label
           >
-        </div>
-        <div *ngIf="emailError" class="mt-1 text-sm text-red-600">
-          Email inválido
-        </div>
-      </div>
-
-        <!-- Password Field -->
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+          <input
+            formControlName="email"
+            type="email"
+            placeholder="seu@email.com"
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none"
+            [ngClass]="{
+              'border-red-500':
+                signupForm.get('email')?.invalid &&
+                signupForm.get('email')?.touched,
+              'border-gray-300':
+                signupForm.get('email')?.valid ||
+                !signupForm.get('email')?.touched
+            }"
+          />
+          <div
+            *ngIf="
+              signupForm.get('email')?.touched &&
+              signupForm.get('email')?.invalid
+            "
+            class="text-sm text-red-600 mt-1"
+          >
+            <div *ngIf="signupForm.get('email')?.errors?.['required']">
+              E‑mail é obrigatório.
             </div>
-            <input 
-              id="password" 
-              type="password" 
-              [(ngModel)]="password" 
-              name="password"
-              class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="Sua senha"
-              required
-            >
-          </div>
-        </div>
-
-        <!-- Confirm Password Field -->
-        <div>
-          <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
+            <div *ngIf="signupForm.get('email')?.errors?.['email']">
+              E‑mail inválido.
             </div>
-            <input 
-              id="confirmPassword" 
-              type="password" 
-              [(ngModel)]="confirmPassword" 
-              name="confirmPassword"
-              class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="Confirme sua senha"
-              required
-            >
           </div>
         </div>
 
-        <!-- Aceitar Termos -->
-        <div class="flex items-start">
-          <div class="flex items-center h-5">
-            <input 
-              id="terms" 
-              type="checkbox" 
-              [(ngModel)]="termsAccepted" 
-              name="terms"
-              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              required
-            >
-          </div>
-          <div class="ml-3 text-sm">
-            <label for="terms" class="text-gray-700">Eu concordo com os <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Termos de Serviço</a> e <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Política de Privacidade</a></label>
+        <!-- Senha -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Senha</label
+          >
+          <input
+            formControlName="password"
+            type="password"
+            placeholder="Mínimo 6 caracteres"
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none"
+            [ngClass]="{
+              'border-red-500':
+                signupForm.get('password')?.invalid &&
+                signupForm.get('password')?.touched
+            }"
+          />
+          <div
+            *ngIf="
+              signupForm.get('password')?.touched &&
+              signupForm.get('password')?.invalid
+            "
+            class="text-sm text-red-600 mt-1"
+          >
+            <div *ngIf="signupForm.get('password')?.errors?.['required']">
+              Senha é obrigatória.
+            </div>
+            <div *ngIf="signupForm.get('password')?.errors?.['minlength']">
+              Senha precisa ter ao menos 6 caracteres.
+            </div>
           </div>
         </div>
 
-        <!-- Mensagem de Erro -->
-        <div *ngIf="errorMessage" class="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
-          <div class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <p>{{ errorMessage }}</p>
+        <!-- Confirmar Senha -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Confirmar Senha</label
+          >
+          <input
+            formControlName="confirmPassword"
+            type="password"
+            placeholder="Repita a senha"
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none"
+            [ngClass]="{
+              'border-red-500':
+                signupForm.errors?.['mismatch']  &&
+                (signupForm.get('confirmPassword')?.touched ||
+                  signupForm.get('password')?.touched)
+            }"
+          />
+          <div
+            *ngIf="
+              signupForm.errors?.['mismatch'] &&
+              (signupForm.get('confirmPassword')?.touched ||
+                signupForm.get('password')?.touched)
+            "
+            class="text-sm text-red-600 mt-1"
+          >
+            As senhas não coincidem.
           </div>
         </div>
 
-        <!-- Submit Button -->
-        <button 
-          type="submit" 
-          class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
+        <!-- Termos -->
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            formControlName="terms"
+            id="terms"
+            class="mr-2"
+          />
+          <label for="terms" class="text-sm text-gray-700">
+            Aceito os <a href="#" class="text-indigo-600">Termos de Serviço</a>
+          </label>
+        </div>
+        <div
+          *ngIf="
+            signupForm.get('terms')?.touched && signupForm.get('terms')?.invalid
+          "
+          class="text-sm text-red-600"
+        >
+          Você precisa aceitar os termos.
+        </div>
+
+        <!-- Erro do servidor -->
+        <div *ngIf="serverError" class="p-3 bg-red-50 text-red-700 rounded">
+          {{ serverError }}
+        </div>
+
+        <!-- Botão -->
+        <button
+          type="submit"
+          [disabled]="signupForm.invalid"
+          class="w-full py-3 bg-indigo-600 text-white rounded-lg disabled:opacity-50"
         >
           REGISTRAR
         </button>
@@ -128,7 +170,10 @@
 
         <!-- Login Link -->
         <div class="mt-6">
-          <a routerLink="/login" class="w-full block text-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
+          <a
+            routerLink="/login"
+            class="w-full block text-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
+          >
             Faça login
           </a>
         </div>

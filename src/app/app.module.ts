@@ -21,12 +21,7 @@ import { UsersListComponent } from './users-list/users-list.component';
 
 @NgModule({
   declarations: [
-   
-    AppComponent,
-   LoginComponent,
-   SignupComponent,
-  EditUserComponent,
-   UsersListComponent
+ 
   ],
   imports: [
     
@@ -44,7 +39,7 @@ import { UsersListComponent } from './users-list/users-list.component';
    
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: []
 })
 
 export class AppModule { }

@@ -29,6 +29,7 @@ export class KeycloakService {
           console.log('Login successful:', response);
           this.accessToken = response.access_token;
           localStorage.setItem('keycloak_token', response.access_token);
+          localStorage.setItem('token', response.access_token); 
         }),
         catchError(error => {
           console.error('Login error details:', error);
@@ -51,5 +52,6 @@ export class KeycloakService {
   logout(): void {
     this.accessToken = null;
     localStorage.removeItem('keycloak_token');
+   
   }
 }

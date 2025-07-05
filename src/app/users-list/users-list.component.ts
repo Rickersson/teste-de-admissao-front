@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { User } from '../interfaces/user.interface';
+import { KeycloakService } from '../services/keycloak.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss']
+  styleUrls: ['./users-list.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule ,]
 })
 export class UsersListComponent implements OnInit {
   users: User[] = [];
@@ -19,7 +24,8 @@ export class UsersListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private keycloakService: KeycloakService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +77,12 @@ export class UsersListComponent implements OnInit {
       }
     });
   }
+
+  logout(): void {
+    this.keycloakService.logout();      
+    this.router.navigate(['/login']);   
+  }
+
 
 deleteUser(userId: number): void {
   if (confirm('Tem certeza que deseja excluir este usuário?')) {

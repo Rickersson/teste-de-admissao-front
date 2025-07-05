@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { KeycloakService } from '../services/keycloak.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router,private keycloak:KeycloakService) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    if (this.authService.getToken()) {
+   canActivate(): boolean {
+    console.log('AuthGuard#canActivate called, isAuthenticated=', this.keycloak.isAuthenticated());
+    if (this.keycloak.isAuthenticated()) {
       return true;
-    } else {
-      this.router.navigate(['/login']);
-      return false;
     }
+    console.log('AuthGuard: bloqueando rota, redirecionando para /login');
+    this.router.navigate(['/login']);
+    return false;
   }
 }

@@ -67,12 +67,21 @@ onSubmit(): void {
   if (this.editForm.valid) {
     const { newEmail, newPassword, currentPassword, status } = this.editForm.value;
 
-    const updatedUser = {
-      email: newEmail || this.currentUser.email,
-      password: newPassword,
-      currentPassword,
-      isActive: status
-    };
+    // Montar payload dinâmico
+    const updatedUser: any = {};
+
+    if (newEmail && newEmail !== this.currentUser.email) {
+      updatedUser.email = newEmail;
+    }
+
+    if (typeof status === 'boolean') {
+      updatedUser.isActive = status;
+    }
+
+    if (newPassword) {
+      updatedUser.newPassword = newPassword;
+      updatedUser.currentPassword = currentPassword;
+    }
 
     this.userService.updateUser(this.userId, updatedUser).subscribe({
       next: () => {
@@ -86,6 +95,7 @@ onSubmit(): void {
     });
   }
 }
+
 
 
   cancel(): void {

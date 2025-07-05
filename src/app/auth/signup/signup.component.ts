@@ -1,56 +1,52 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.scss'], imports: [ ReactiveFormsModule, CommonModule, FormsModule]
 })
-export class SignupComponent {
-  email: string = '';
-  password: string = '';
-  confirmPassword: string = '';
-  termsAccepted: boolean = false;
-  errorMessage: string | null = null;
-  emailError: boolean = false;
+export class SignupComponent implements OnInit {
+  signupForm!: FormGroup;
+  serverError: string | null = null;
 
   constructor(
+    private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {}
 
-  validateEmail(): void {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    this.emailError = !emailRegex.test(this.email);
+  ngOnInit(): void {
+    this.signupForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
+      terms: [false, Validators.requiredTrue]
+    }, { validators: this.passwordsMatch });
+  }
+
+  private passwordsMatch(fg: FormGroup) {
+    const pw = fg.get('password')!.value;
+    const cpw = fg.get('confirmPassword')!.value;
+    return pw === cpw ? null : { mismatch: true };
   }
 
   onSubmit(): void {
-    this.validateEmail();
-    
-    if (this.emailError) {
-      this.errorMessage = 'Por favor, insira um email válido.';
+    this.serverError = null;
+    if (this.signupForm.invalid) {
+      this.signupForm.markAllAsTouched();
       return;
     }
-
-    if (!this.termsAccepted) {
-      this.errorMessage = 'Você precisa aceitar os termos.';
-      return;
-    }
-
-    if (this.password !== this.confirmPassword) {
-      this.errorMessage = 'As senhas não coincidem.';
-      return;
-    }
-
-    this.authService.register(this.email, this.password).subscribe(
-      () => {
-        this.router.navigate(['/login']);
-      },
-      (error) => {
-        this.errorMessage = 'Erro no registro. Verifique os dados.';
-        console.error(error);
+    const { email, password } = this.signupForm.value;
+    this.authService.register(email, password).subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: err => {
+        console.error(err);
+        this.serverError = err.error?.message || 'Falha ao registrar';
       }
-    );
+    });
   }
 }
