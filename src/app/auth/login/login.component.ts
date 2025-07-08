@@ -14,6 +14,9 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   serverError: string | null = null;
+showPassword = false;
+showConfirmPassword = false;
+
 
   constructor(
     private fb: FormBuilder,

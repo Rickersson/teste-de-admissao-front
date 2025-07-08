@@ -11,7 +11,6 @@ import { KeycloakService } from './keycloak.service';
 export class UserService {
   private apiUrl = 'http://localhost:3000/auth/users'; 
  
-  private keycloakAdminUrl = 'http://localhost:8080/admin/realms/my-app/users';
 
   constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
 

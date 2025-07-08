@@ -14,6 +14,8 @@ import { AuthService } from 'src/app/services/auth.service';
 export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
   serverError: string | null = null;
+showPassword = false;
+showConfirmPassword = false;
 
   constructor(
     private fb: FormBuilder,

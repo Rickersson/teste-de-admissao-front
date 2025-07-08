@@ -34,19 +34,51 @@
 </div>
 
 
-<div>
+<div class="relative"> <!-- Adicionei esta div com relative -->
   <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-  <input 
-    type="password" 
-    id="password" 
-    formControlName="password"
-    [ngClass]="{
-      'border-red-500 focus:border-red-500 focus:ring-red-500': loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
-      'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500': !(loginForm.get('password')?.invalid && loginForm.get('password')?.touched)
-    }"
-    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm"
-    placeholder="********"
-  >
+  <div class="relative"> <!-- Container relativo para o input e botão -->
+    <input 
+      [type]="showPassword ? 'text' : 'password'"
+      id="password" 
+      formControlName="password"
+      [ngClass]="{
+        'border-red-500 focus:border-red-500 focus:ring-red-500': loginForm.get('password')?.invalid && loginForm.get('password')?.touched,
+        'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500': !(loginForm.get('password')?.invalid && loginForm.get('password')?.touched)
+      }"
+      class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm pr-10"
+      placeholder="Insira sua senha"
+    >
+    <button
+      type="button"
+      (click)="showPassword = !showPassword"
+      class="absolute right-0 top-1/2 transform -translate-y-1/2 px-3 text-gray-500 hover:text-gray-700"
+    >
+      <svg
+        *ngIf="!showPassword"
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7s-8.268-2.943-9.542-7z" />
+      </svg>
+      <svg
+        *ngIf="showPassword"
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.996 9.996 0 012.317-4.288M6.7 6.7A10 10 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.01 10.01 0 01-1.231 2.507M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3l18 18" />
+      </svg>
+    </button>
+  </div>
   <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-sm text-red-600 mt-1">
     Senha é obrigatória.
   </div>
